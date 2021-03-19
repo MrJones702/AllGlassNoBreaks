@@ -1,38 +1,46 @@
 import React, { Component } from 'react';
+import {Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle} from 'reactstrap';
 
 class Products extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            units: [
-                {
-                    id: 0,
-                    name: '180 degree shower',
-                    image: '/images/shower180.jpg',
-                    // description
-                },
-                {
-                    id: 1,
-                    name: '90 degree shower',
-                    image: '/images/shower90.jpg',
-                    // description
-                },
-                {
-                    id: 2,
-                    name: 'wine display case',
-                    image: '/images/winedisplay.jpg',
-                    // description 
-                }
-            ]
+            selectedService: null
         };
     }
 
-    render() {
-        const products = this.state.units.map(unit => {
+    onServiceSelect(service) {
+        this.setState({selectedService: service});
+    }
+
+    renderSelectedService(service) {
+        if(service) {
             return (
-                <div className="col">
-                    <img src={unit.image} alt={unit.name} />
-                    <h2>{unit.name}</h2>
+                <Card>
+                    <CardImg top src={service.image} alt={service.name} />
+                    <CardBody>
+                        <CardTitle>{service.name}</CardTitle>
+                        <CardText>{service.description}</CardText>
+                    </CardBody>
+                </Card>
+            );
+        }
+        return <div />;
+    }
+            
+        
+    
+
+    render() {
+        const products = this.props.services.map(service => {
+            return (
+                <div key={service.id} className="col-md-4 m-1">
+                    <Card onClick={() => this.onServiceSelect(service)}>
+                        <CardImg width="100%" src={service.image} alt={service.name} />
+                        <CardImgOverlay>
+                            <CardTitle>{service.name}</CardTitle>
+                        </CardImgOverlay>
+                    </Card>
                 </div>
             );
         });
@@ -41,6 +49,11 @@ class Products extends Component {
             <div className="container">
                 <div className="row">
                     {products}
+                </div>
+                <div className="row">
+                    <div classname="col-md-4 m-1">
+                        {this.renderSelectedService(this.state.selectedService)}
+                    </div>
                 </div>
             </div>
         );
